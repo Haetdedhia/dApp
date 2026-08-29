@@ -1,0 +1,98 @@
+.home-container {
+  color: #c5c6c7;
+  text-align: left;
+  padding: 2rem 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hero-section {
+  border: 1px solid #1f2833;
+  background-color: #0f1015;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.hero-section::before {
+  content: "[ OVERVIEW_SHELL ]";
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  background-color: #0b0c10;
+  padding: 0 5px;
+  color: #66fcf1;
+  font-size: 0.8rem;
+}
+
+.hero-section h1 {
+  font-size: 1.8rem;
+  color: #66fcf1;
+  margin-bottom: 1rem;
+  font-weight: normal;
+}
+
+.hero-section p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #c5c6c7;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.feature-card {
+  background-color: #0c0d12;
+  border: 1px solid #1f2833;
+  padding: 1.5rem;
+  position: relative;
+}
+
+.feature-card:nth-child(1)::before { content: "SYS_SRC_01"; position: absolute; top: -10px; left: 10px; background-color: #0b0c10; color: #45f3ff; font-size: 0.7rem; padding: 0 4px; }
+.feature-card:nth-child(2)::before { content: "SYS_RT_02"; position: absolute; top: -10px; left: 10px; background-color: #0b0c10; color: #45f3ff; font-size: 0.7rem; padding: 0 4px; }
+.feature-card:nth-child(3)::before { content: "SYS_IND_03"; position: absolute; top: -10px; left: 10px; background-color: #0b0c10; color: #45f3ff; font-size: 0.7rem; padding: 0 4px; }
+.feature-card:nth-child(4)::before { content: "SYS_VFY_04"; position: absolute; top: -10px; left: 10px; background-color: #0b0c10; color: #45f3ff; font-size: 0.7rem; padding: 0 4px; }
+
+.feature-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.feature-card h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #45f3ff;
+  font-weight: normal;
+}
+
+.feature-card p {
+  font-size: 0.85rem;
+  color: #8f9095;
+  line-height: 1.5;
+}
+
+.cta-container {
+  text-align: center;
+}
+
+.cta-button {
+  background-color: transparent;
+  color: #66fcf1;
+  border: 1px solid #66fcf1;
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 0.75rem 2rem;
+  margin-top: 1rem;
+  display: inline-block;
+  font-family: inherit;
+  transition: all 0.15s ease;
+}
+
+.cta-button:hover {
+  background-color: #66fcf1;
+  color: #0b0c10;
+}

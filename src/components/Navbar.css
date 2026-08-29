@@ -1,0 +1,79 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #0c0d12;
+  border-bottom: 2px solid #1f2833;
+}
+
+.navbar-logo {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #66fcf1;
+  text-decoration: none;
+  font-family: 'Fira Code', 'Courier New', Courier, monospace;
+}
+
+.navbar-menu {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+}
+
+.navbar-menu a {
+  color: #c5c6c7;
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.navbar-menu a:hover {
+  color: #66fcf1;
+  border: 1px solid #66fcf1;
+  background-color: rgba(102, 252, 241, 0.05);
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+}
+
+.connect-btn {
+  background-color: transparent;
+  color: #66fcf1;
+  border: 1px solid #66fcf1;
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.connect-btn:hover {
+  background-color: #66fcf1;
+  color: #0b0c10;
+}
+
+.account-details {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-role-badge {
+  border: 1px solid #45f3ff;
+  color: #45f3ff;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  background-color: rgba(69, 243, 255, 0.05);
+}
+
+.account-address {
+  border: 1px solid #1f2833;
+  color: #858687;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+}
