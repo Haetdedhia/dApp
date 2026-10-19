@@ -60,3 +60,25 @@ code {
 ::-webkit-scrollbar-thumb:hover {
   background: #45f3ff;
 }
+
+/* ===== Global responsive layout ===== */
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1.25rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 1rem 0.75rem;
+  }
+}
+
+/* The CRT scanline overlay is heavy on mobile GPUs and hurts QR scanning
+   readability, so drop it on small screens. */
+@media (max-width: 600px) {
+  .app::before {
+    display: none;
+  }
+}

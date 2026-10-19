@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+jobs:
+  test:
+    name: Contract tests and frontend build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile contracts
+        run: npx hardhat compile
+
+      - name: Run contract tests
+        run: npx hardhat test
+
+      - name: Report coverage
+        run: npx hardhat coverage
+
+      - name: Run frontend tests
+        run: npm run test:ui
+
+      # The frontend imports src/contracts/*.json, which deploy.js generates.
+      # Those files are committed, so the build works without a chain here.
+      - name: Build frontend
+        run: npm run build
+
+  static-analysis:
+    name: Slither
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Slither
+        uses: crytic/slither-action@v0.4.0
+        with:
+          node-version: '20'
+          # Informational findings (naming conventions, the solc-version notice) are
+          # reviewed and accepted in docs/SECURITY-ANALYSIS.md, so only genuine
+          # severity should fail the build.
+          fail-on: medium
+          slither-args: --exclude-dependencies

@@ -172,6 +172,15 @@ function CreateProduct({ contract, account, userRole }) {
               />
             </div>
             <p className="qr-info">Scan to verify authenticity on the blockchain.</p>
+            <p className="qr-url">{verifyUrl}</p>
+            {verifyUrl.includes('localhost') && (
+              <p className="qr-warning">
+                This QR points at <strong>localhost</strong>, which a phone cannot reach.
+                To scan it from a phone on the same Wi-Fi, reopen this app using the
+                Network address Vite printed in the terminal (e.g. http://192.168.x.x:5173)
+                and register the product again.
+              </p>
+            )}
             <button className="download-btn" onClick={handleDownloadQR}>
               Download QR Code
             </button>

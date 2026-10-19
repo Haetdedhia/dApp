@@ -1,0 +1,42 @@
+.network-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: rgba(255, 176, 0, 0.08);
+  border-bottom: 2px solid #ffb000;
+  color: #ffb000;
+  font-size: 0.85rem;
+}
+
+.network-banner-text strong {
+  color: #ffd166;
+}
+
+.network-banner-btn {
+  background-color: transparent;
+  color: #ffb000;
+  border: 1px solid #ffb000;
+  padding: 0.4rem 0.9rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.network-banner-btn:hover {
+  background-color: #ffb000;
+  color: #0b0c10;
+}
+
+@media (max-width: 600px) {
+  .network-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+  }
+}

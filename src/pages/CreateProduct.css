@@ -169,3 +169,45 @@
   background-color: #48bb78;
   color: #0b0c10;
 }
+
+/* ===== Responsive ===== */
+
+@media (max-width: 768px) {
+  .create-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-card {
+    padding: 1rem;
+  }
+
+  .create-card h2 {
+    font-size: 1.1rem;
+  }
+
+  .create-card input,
+  .create-card select {
+    font-size: 16px; /* iOS Safari zooms the page on focus below 16px */
+  }
+}
+
+.qr-url {
+  font-size: 0.7rem;
+  color: #858687;
+  word-break: break-all;
+  text-align: center;
+  margin-top: 0.4rem;
+}
+
+.qr-warning {
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: #ffb000;
+  background-color: rgba(255, 176, 0, 0.06);
+  border-left: 3px solid #ffb000;
+  padding: 0.7rem 0.9rem;
+  margin-top: 0.8rem;
+  text-align: left;
+}

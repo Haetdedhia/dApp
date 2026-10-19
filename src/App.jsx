@@ -1,199 +1,245 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
 import Navbar from './components/Navbar';
+import NetworkBanner from './components/NetworkBanner';
 import Home from './pages/Home';
 import CreateProduct from './pages/CreateProduct';
 import TransferProduct from './pages/TransferProduct';
 import VerifyProduct from './pages/VerifyProduct';
 import ManageRoles from './pages/ManageRoles';
+import Dashboard from './pages/Dashboard';
+import deployment from './contracts/contract-address.json';
+import SupplyChainArtifact from './contracts/SupplyChain.json';
 import './App.css';
 
 /**
  * App - Root component of the Decentralized Supply Chain tracker dApp.
- * Responsible for wallet connection handshake (via ethers.js and browser window.ethereum injector),
- * caching contract references, tracking connected Ethereum accounts, fetching user roles,
- * and routing layout targets through React Router.
+ *
+ * Holds TWO contract instances, and the distinction matters:
+ *
+ *   readContract - backed by a plain JsonRpcProvider straight to the chain's RPC
+ *                  endpoint. Built on mount, needs no wallet and no user action.
+ *                  Used for every `view` call (verifyProduct, getProduct,
+ *                  getProductHistory) and for event queries.
+ *
+ *   contract     - backed by the MetaMask signer. Only exists once the user
+ *                  connects. Used for everything that costs gas.
+ *
+ * The split is what lets a consumer scan a QR code on a phone with no wallet
+ * installed and still verify a product, which is the whole point of the app.
  */
 function App() {
-  // --- STATE VARIABLES ---
-  // account: hexadecimal string representing the active wallet address of the connected user
+  // --- WALLET STATE (write path) ---
   const [account, setAccount] = useState(null);
-  // provider: ethers.js abstraction of the browser's Ethereum RPC network node hook (Metamask)
-  const [provider, setProvider] = useState(null);
-  // signer: ethers.js representation of the private key owner used to authorize transactions
-  const [signer, setSigner] = useState(null);
-  // contract: ethers.Contract reference target used to map smart contract functions to local JS methods
   const [contract, setContract] = useState(null);
-  // userRole: number value (0-3) caching on-chain permission structure mapping
   const [userRole, setUserRole] = useState(null);
+  const [isOwner, setIsOwner] = useState(false);
+  const [walletChainId, setWalletChainId] = useState(null);
 
-  // Attempt silent connection checking on initial application load (checks if dApp is pre-authorized)
+  // --- READ-ONLY STATE (public path, no wallet required) ---
+  const [readContract, setReadContract] = useState(null);
+
+  // The chain this build's contract address actually lives on.
+  const expectedChainId = deployment.chainId;
+
+  /**
+   * Build the wallet-free contract instance as soon as the app mounts.
+   * This is deliberately independent of MetaMask.
+   */
   useEffect(() => {
-    checkWalletConnection();
+    try {
+      const rpcProvider = new ethers.JsonRpcProvider(deployment.rpcUrl);
+      setReadContract(
+        new ethers.Contract(deployment.SupplyChain, SupplyChainArtifact.abi, rpcProvider)
+      );
+    } catch (error) {
+      console.error('Could not create read-only provider:', error);
+    }
   }, []);
 
   /**
-   * checkWalletConnection - Checks if the user's browser has an Ethereum wallet injected
-   * and if the user has already approved connections to this site.
+   * connectWallet - user-initiated MetaMask connection for write operations.
    */
-  const checkWalletConnection = async () => {
-    if (window.ethereum) {
-      try {
-        const accounts = await window.ethereum.request({
-          method: 'eth_accounts'
-        });
-
-        // If at least one account is already unlocked and connected, trigger full hook configuration
-        if (accounts.length > 0) {
-          await connectWallet();
-        }
-      } catch (error) {
-        console.error("Error checking wallet connection:", error);
-      }
+  const connectWallet = useCallback(async () => {
+    if (!window.ethereum) {
+      alert('MetaMask is not installed. You can still verify products without it.');
+      return;
     }
-  };
 
-  /**
-   * connectWallet - Primary user-initiated interactive connection flow.
-   * Calls window.ethereum API to request access to the browser wallet (e.g. MetaMask).
-   * Instantiates ethers.js providers, signers, dynamically imports build-time addresses,
-   * constructs the contract helper, and updates state wrappers.
-   */
-  const connectWallet = async () => {
     try {
-      if (!window.ethereum) {
-        alert("Please install MetaMask!");
-        return;
-      }
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const browserProvider = new ethers.BrowserProvider(window.ethereum);
+      const walletSigner = await browserProvider.getSigner();
 
-      // Request user authorization to fetch account address information
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts'
-      });
+      const network = await browserProvider.getNetwork();
+      const currentChainId = Number(network.chainId);
+      setWalletChainId(currentChainId);
 
-      // BrowserProvider wraps standard EIP-1193 window.ethereum provider object
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      // Retrieve signer for write-level smart contract interaction signatures
-      const signer = await provider.getSigner();
-
-      // Dynamic import prevents build failures if deployment artifacts aren't created yet
-      const contractAddress = (await import('./contracts/contract-address.json')).SupplyChain;
-      const contractABI = (await import('./contracts/SupplyChain.json')).abi;
-
-      // Instantiate Ethers Contract abstraction to map transactions
-      const contract = new ethers.Contract(contractAddress, contractABI, signer);
+      const writeContract = new ethers.Contract(
+        deployment.SupplyChain,
+        SupplyChainArtifact.abi,
+        walletSigner
+      );
 
       setAccount(accounts[0]);
-      setProvider(provider);
-      setSigner(signer);
-      setContract(contract);
+      setContract(writeContract);
 
-      // Access the contract on-chain state to look up caller's current role registry index
-      const role = await contract.getRole(accounts[0]);
-      setUserRole(Number(role));
+      // Only query on-chain state if the wallet is actually on the right chain,
+      // otherwise these calls hit an address that holds nothing on that chain.
+      if (currentChainId === expectedChainId) {
+        const role = await writeContract.getRole(accounts[0]);
+        setUserRole(Number(role));
 
-      console.log("Connected:", accounts[0]);
+        const ownerAddress = await writeContract.owner();
+        setIsOwner(ownerAddress.toLowerCase() === accounts[0].toLowerCase());
+      } else {
+        setUserRole(null);
+        setIsOwner(false);
+      }
     } catch (error) {
-      console.error("Error connecting wallet:", error);
-      alert("Failed to connect wallet");
+      console.error('Error connecting wallet:', error);
+      alert('Failed to connect wallet');
     }
-  };
+  }, [expectedChainId]);
 
-  // --- METAMASK EVENT AUDIT LISTENERS ---
-  // Registers listeners to handle wallet context swaps (different account, chain changes)
+  // Silent reconnect if the user already authorised this site previously.
   useEffect(() => {
-    if (window.ethereum) {
-      const handleAccounts = (accounts) => {
-        if (accounts.length > 0) {
-          // Re-trigger wallet logic to update signer context and role mappings
-          connectWallet();
-        } else {
-          // User manually locked/disconnected all accounts
-          setAccount(null);
-          setUserRole(null);
-        }
-      };
+    const checkExisting = async () => {
+      if (!window.ethereum) return;
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        if (accounts.length > 0) await connectWallet();
+      } catch (error) {
+        console.error('Error checking wallet connection:', error);
+      }
+    };
+    checkExisting();
+  }, [connectWallet]);
 
-      // Handle account change events
-      window.ethereum.on('accountsChanged', handleAccounts);
-      // Hard refresh page on block network fork chain changes (prevents cache mismatch)
-      window.ethereum.on('chainChanged', () => window.location.reload());
+  // --- METAMASK EVENT LISTENERS ---
+  useEffect(() => {
+    if (!window.ethereum) return;
 
-      // Clean up event listeners on component unmount
-      return () => {
-        window.ethereum.removeListener('accountsChanged', handleAccounts);
-      };
-    }
-  }, []);
+    const handleAccounts = (accounts) => {
+      if (accounts.length > 0) {
+        connectWallet();
+      } else {
+        setAccount(null);
+        setUserRole(null);
+        setIsOwner(false);
+        setContract(null);
+      }
+    };
+
+    const handleChain = () => window.location.reload();
+
+    window.ethereum.on('accountsChanged', handleAccounts);
+    window.ethereum.on('chainChanged', handleChain);
+
+    return () => {
+      window.ethereum.removeListener('accountsChanged', handleAccounts);
+      window.ethereum.removeListener('chainChanged', handleChain);
+    };
+  }, [connectWallet]);
 
   /**
-   * getRoleName - Maps integer role index to key-value string
-   * @param {number} role - Role code retrieved from smart contract (0-3)
-   * @returns {string} Human-readable role identifier
+   * switchNetwork - asks MetaMask to move to the chain the contract is deployed on.
+   * If the chain is unknown to MetaMask (error 4902, typical for a local Hardhat
+   * node that has never been added) it offers to add it first.
    */
+  const switchNetwork = async () => {
+    if (!window.ethereum) return;
+    const hexChainId = '0x' + expectedChainId.toString(16);
+
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: hexChainId }]
+      });
+      return;
+    } catch (switchError) {
+      if (switchError.code !== 4902) {
+        console.error('Could not switch network:', switchError);
+        return;
+      }
+    }
+
+    // 4902 means MetaMask does not know this chain yet, so offer to add it.
+    try {
+      await window.ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: hexChainId,
+            chainName: `Supply Chain Network (${deployment.network})`,
+            rpcUrls: [deployment.rpcUrl],
+            nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 }
+          }
+        ]
+      });
+    } catch (addError) {
+      console.error('Could not add network:', addError);
+    }
+  };
+
   const getRoleName = (role) => {
     const roles = ['None', 'Manufacturer', 'Distributor', 'Retailer'];
-    return roles[role] || 'Unknown';
+    return roles[role] ?? 'Unknown';
   };
+
+  // Only warn when a wallet is actually connected. A visitor with no wallet is
+  // a supported case, not an error.
+  const wrongNetwork =
+    account !== null && walletChainId !== null && walletChainId !== expectedChainId;
 
   return (
     <Router>
       <div className="app">
-        {/* Navigation header with profile, status, and network hooks */}
         <Navbar
           account={account}
           userRole={userRole}
+          isOwner={isOwner}
           getRoleName={getRoleName}
           connectWallet={connectWallet}
         />
+
+        {wrongNetwork && (
+          <NetworkBanner
+            expectedNetwork={deployment.network}
+            expectedChainId={expectedChainId}
+            currentChainId={walletChainId}
+            onSwitch={switchNetwork}
+          />
+        )}
+
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
 
-            {/* Create Product path - Restricted to Manufacturer permission */}
             <Route
               path="/create"
-              element={
-                <CreateProduct
-                  contract={contract}
-                  account={account}
-                  userRole={userRole}
-                />
-              }
+              element={<CreateProduct contract={contract} account={account} userRole={userRole} />}
             />
 
-            {/* Transfer Product path - Workflow splits actions based on active roles */}
             <Route
               path="/transfer"
-              element={
-                <TransferProduct
-                  contract={contract}
-                  account={account}
-                  userRole={userRole}
-                />
-              }
+              element={<TransferProduct contract={contract} account={account} userRole={userRole} />}
             />
 
-            {/* Verify Product path - Consumer search lookup (optional query URL param) */}
+            {/* Public route. readContract makes it work with no wallet at all;
+                the signer contract is optional and only enables recording a scan. */}
             <Route
               path="/verify/:productId?"
-              element={
-                <VerifyProduct
-                  contract={contract}
-                />
-              }
+              element={<VerifyProduct readContract={readContract} contract={contract} />}
             />
 
-            {/* Manage Roles path - Administrator-only command terminal */}
+            {/* Public route, also wallet-free - builds its list from event logs. */}
+            <Route path="/dashboard" element={<Dashboard readContract={readContract} />} />
+
             <Route
               path="/roles"
-              element={
-                <ManageRoles
-                  contract={contract}
-                  account={account}
-                />
-              }
+              element={<ManageRoles contract={contract} account={account} isOwner={isOwner} />}
             />
           </Routes>
         </main>

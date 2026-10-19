@@ -126,3 +126,26 @@
   border: 1px solid #f56565;
   color: #f56565;
 }
+
+/* ===== Responsive ===== */
+
+@media (max-width: 768px) {
+  .transfer-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .transfer-card {
+    padding: 1rem;
+  }
+
+  .transfer-card h2 {
+    font-size: 1.1rem;
+  }
+
+  .transfer-card input,
+  .transfer-card select {
+    font-size: 16px; /* iOS Safari zooms the page on focus below 16px */
+  }
+}

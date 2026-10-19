@@ -123,3 +123,58 @@
   border: 1px solid #f56565;
   color: #f56565;
 }
+
+/* ===== Responsive ===== */
+
+@media (max-width: 768px) {
+  .roles-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .roles-card {
+    padding: 1rem;
+  }
+
+  .roles-card h2 {
+    font-size: 1.1rem;
+  }
+
+  .roles-card input,
+  .roles-card select {
+    font-size: 16px; /* iOS Safari zooms the page on focus below 16px */
+  }
+}
+
+/* Divider between the assign form and the lookup form */
+.roles-divider {
+  height: 1px;
+  background-color: #1f2833;
+  margin: 2rem 0 1.5rem;
+}
+
+.roles-card h3 {
+  color: #45f3ff;
+  font-size: 1rem;
+  font-weight: normal;
+  margin-bottom: 1rem;
+}
+
+.submit-btn.secondary {
+  background-color: transparent;
+  color: #858687;
+  border-color: #1f2833;
+}
+
+.submit-btn.secondary:hover:not(:disabled) {
+  color: #45f3ff;
+  border-color: #45f3ff;
+  background-color: rgba(69, 243, 255, 0.05);
+}
+
+.roles-card .status-box.info {
+  border-left: 3px solid #45f3ff;
+  color: #45f3ff;
+  background-color: rgba(69, 243, 255, 0.05);
+}

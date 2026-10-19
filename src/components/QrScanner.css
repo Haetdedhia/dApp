@@ -1,0 +1,52 @@
+.qr-scanner {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 1px solid #1f2833;
+  background-color: rgba(102, 252, 241, 0.02);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.qr-scanner-region {
+  width: 100%;
+  max-width: 320px;
+  border: 1px solid #45f3ff;
+}
+
+/* html5-qrcode injects a raw <video>; keep it inside the frame on small screens. */
+.qr-scanner-region video {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+.qr-scanner-hint {
+  font-size: 0.8rem;
+  color: #858687;
+  text-align: center;
+}
+
+.qr-scanner-error {
+  font-size: 0.8rem;
+  color: #ff5f56;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.qr-scanner-close {
+  background-color: transparent;
+  color: #858687;
+  border: 1px solid #1f2833;
+  padding: 0.4rem 1rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.qr-scanner-close:hover {
+  color: #ff5f56;
+  border-color: #ff5f56;
+}

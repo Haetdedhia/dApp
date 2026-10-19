@@ -1,18 +1,55 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/home/buriburi/home/dApp/contracts/SupplyChain.sol": {
-      "lastModificationDate": 1788014873549,
-      "contentHash": "5ec1d4ec6baa9a023823c4c37e0f2661",
+    "C:\\Users\\Insiya\\OneDrive\\Desktop\\Insiya Disk\\India Masters\\Blockchain\\dApp_blockchain\\contracts\\experiments\\IdentifierCost.sol": {
+      "lastModificationDate": 1792178357918,
+      "contentHash": "3cdda24f69d3ab80abea1bf9413e1a63",
+      "sourceName": "contracts/experiments/IdentifierCost.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Bytes32IdStore",
+        "StringIdStore"
+      ]
+    },
+    "C:\\Users\\Insiya\\OneDrive\\Desktop\\Insiya Disk\\India Masters\\Blockchain\\dApp_blockchain\\contracts\\SupplyChain.sol": {
+      "lastModificationDate": 1792178468335,
+      "contentHash": "ece571ff7685562328c7dbba0997213b",
       "sourceName": "contracts/SupplyChain.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
-          "evmVersion": "paris",
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
+          "evmVersion": "paris",
           "outputSelection": {
             "*": {
               "*": [
@@ -30,7 +67,8 @@
         }
       },
       "imports": [
-        "@openzeppelin/contracts/access/Ownable.sol"
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/utils/Pausable.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
@@ -39,18 +77,18 @@
         "SupplyChain"
       ]
     },
-    "/home/buriburi/home/dApp/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
-      "lastModificationDate": 1787984145665,
+    "C:\\Users\\Insiya\\OneDrive\\Desktop\\Insiya Disk\\India Masters\\Blockchain\\dApp_blockchain\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
+      "lastModificationDate": 1792175646039,
       "contentHash": "d3c790edc9ccf808a17c5a6cd13614fd",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
-          "evmVersion": "paris",
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
+          "evmVersion": "paris",
           "outputSelection": {
             "*": {
               "*": [
@@ -77,18 +115,56 @@
         "Ownable"
       ]
     },
-    "/home/buriburi/home/dApp/node_modules/@openzeppelin/contracts/utils/Context.sol": {
-      "lastModificationDate": 1787984143275,
+    "C:\\Users\\Insiya\\OneDrive\\Desktop\\Insiya Disk\\India Masters\\Blockchain\\dApp_blockchain\\node_modules\\@openzeppelin\\contracts\\utils\\Pausable.sol": {
+      "lastModificationDate": 1792175646094,
+      "contentHash": "0d47b53e10b1985efbb396f937626279",
+      "sourceName": "@openzeppelin/contracts/utils/Pausable.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "Pausable"
+      ]
+    },
+    "C:\\Users\\Insiya\\OneDrive\\Desktop\\Insiya Disk\\India Masters\\Blockchain\\dApp_blockchain\\node_modules\\@openzeppelin\\contracts\\utils\\Context.sol": {
+      "lastModificationDate": 1792175643906,
       "contentHash": "67bfbc07588eb8683b3fd8f6f909563e",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
         "version": "0.8.20",
         "settings": {
-          "evmVersion": "paris",
           "optimizer": {
-            "enabled": false,
+            "enabled": true,
             "runs": 200
           },
+          "evmVersion": "paris",
           "outputSelection": {
             "*": {
               "*": [

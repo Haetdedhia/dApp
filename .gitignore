@@ -1,1 +1,8 @@
 node_modules
+artifacts
+cache
+dist
+coverage
+coverage.json
+.env
+.DS_Store
