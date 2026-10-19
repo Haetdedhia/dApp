@@ -131,17 +131,19 @@
   white-space: nowrap;
 }
 
+/* Shared lifecycle palette - see :root in index.css. Distributor moved off cyan
+   so a status pill can never be mistaken for an interactive element. */
 .status-manufactured {
-  color: #ffb000;
+  color: var(--stage-manufactured);
 }
 .status-distributorreceived {
-  color: #45f3ff;
+  color: var(--stage-distributor);
 }
 .status-retailerreceived {
-  color: #a78bfa;
+  color: var(--stage-retailer);
 }
 .status-sold {
-  color: #4ade80;
+  color: var(--stage-sold);
 }
 
 .row-link {

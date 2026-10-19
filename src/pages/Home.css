@@ -58,8 +58,33 @@
 .feature-card:nth-child(4)::before { content: "SYS_VFY_04"; position: absolute; top: -10px; left: 10px; background-color: #0b0c10; color: #45f3ff; font-size: 0.7rem; padding: 0 4px; }
 
 .feature-icon {
-  font-size: 1.5rem;
+  /* Lucide renders an inline SVG that inherits currentColor, so each card only
+     needs to set a colour - no separate fill or stroke rule. */
   margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+}
+
+/* Each card takes the colour of the lifecycle stage it describes, matching the
+   status pills on the dashboard and verify pages. nth-child to match the
+   SYS_ label pattern above rather than adding classes to the markup. */
+.feature-card:nth-child(1) .feature-icon { color: var(--stage-manufactured); }
+.feature-card:nth-child(2) .feature-icon { color: var(--stage-distributor); }
+.feature-card:nth-child(3) .feature-icon { color: var(--stage-retailer); }
+.feature-card:nth-child(4) .feature-icon { color: var(--stage-sold); }
+
+/* A faint wash of the same hue sits behind the glyph so the colour reads at a
+   glance, without a solid fill shouting over the restrained terminal palette.
+   color-mix keeps the tint tied to currentColor, so each card stays a one-line
+   colour change above. */
+.feature-icon {
+  width: 42px;
+  height: 42px;
+  margin-left: 0;
+  background-color: color-mix(in srgb, currentColor 10%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
 }
 
 .feature-card h3 {

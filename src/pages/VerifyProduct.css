@@ -170,10 +170,13 @@
   color: #8c8d90;
 }
 
-.detail-item .value.status-manufactured { color: #63b3ed; }
-.detail-item .value.status-distributorreceived { color: #f6ad55; }
-.detail-item .value.status-retailerreceived { color: #b7791f; }
-.detail-item .value.status-sold { color: #48bb78; }
+/* These previously disagreed with the dashboard - Manufactured was blue here and
+   amber there, for the same state. Now both read from the shared palette in
+   index.css, so a colour means one thing across the whole app. */
+.detail-item .value.status-manufactured { color: var(--stage-manufactured); }
+.detail-item .value.status-distributorreceived { color: var(--stage-distributor); }
+.detail-item .value.status-retailerreceived { color: var(--stage-retailer); }
+.detail-item .value.status-sold { color: var(--stage-sold); }
 
 .product-history {
   border: 1px solid #1f2833;
@@ -223,10 +226,22 @@
 }
 
 .status-badge {
-  color: #66fcf1;
+  /* Colour comes from the status-<stage> class alongside this one. */
   font-size: 0.8rem;
   font-weight: bold;
 }
+
+.status-badge.status-manufactured { color: var(--stage-manufactured); }
+.status-badge.status-distributorreceived { color: var(--stage-distributor); }
+.status-badge.status-retailerreceived { color: var(--stage-retailer); }
+.status-badge.status-sold { color: var(--stage-sold); }
+
+/* Tint each timeline marker to match its badge, so the dot sequence shows the
+   same progression as the labels. */
+.timeline-item:has(.status-manufactured) .timeline-marker { border-color: var(--stage-manufactured); }
+.timeline-item:has(.status-distributorreceived) .timeline-marker { border-color: var(--stage-distributor); }
+.timeline-item:has(.status-retailerreceived) .timeline-marker { border-color: var(--stage-retailer); }
+.timeline-item:has(.status-sold) .timeline-marker { border-color: var(--stage-sold); }
 
 .timeline-content .actor {
   font-family: 'Fira Code', monospace;
@@ -380,4 +395,17 @@
   color: #6b6c6d;
   line-height: 1.6;
   margin-top: 0.5rem;
+}
+
+/* Warning icon sits beside the text block rather than inline with the first
+   line, so wrapped text aligns under itself instead of under the icon. */
+.scan-anomaly {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.scan-anomaly-icon {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
 }

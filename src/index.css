@@ -1,3 +1,26 @@
+/**
+ * Colour system.
+ *
+ * Cyan is the UI chrome: links, buttons, borders, focus. Because it is
+ * everywhere, anything else tinted cyan disappears into the furniture.
+ *
+ * So the four supply chain stages get their own palette, deliberately outside
+ * the cyan family. The same colour means the same stage everywhere it appears -
+ * the Home page icons, the dashboard status pills, and the verify page status -
+ * so colour carries meaning rather than decoration.
+ *
+ * Distributor is blue rather than cyan precisely so it cannot be mistaken for
+ * an interactive element.
+ */
+:root {
+  --stage-manufactured: #ffb000; /* amber  - made, not yet moved */
+  --stage-distributor: #60a5fa;  /* blue   - in transit */
+  --stage-retailer: #a78bfa;     /* purple - on the shelf */
+  --stage-sold: #4ade80;         /* green  - lifecycle complete */
+
+  --brand-accent: #ffb000;       /* logo mark, against the cyan wordmark */
+}
+
 * {
   margin: 0;
   padding: 0;

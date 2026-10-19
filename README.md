@@ -17,7 +17,7 @@ retailers to final consumers, with on-chain verification of provenance.
 | Static analysis | Slither: 0 high, 0 medium, 0 low |
 | Gas optimisation | −28.8% across a full product lifecycle |
 
-## 📄 Analysis documents
+## Analysis documents
 
 | Document | Answers |
 |---|---|
@@ -27,7 +27,7 @@ retailers to final consumers, with on-chain verification of provenance.
 | [GAS-ANALYSIS.md](docs/GAS-ANALYSIS.md) | Measured optimisation: why storage layout beat every micro-optimisation |
 | [SECURITY-ANALYSIS.md](docs/SECURITY-ANALYSIS.md) | Slither results and coverage, with each finding assessed |
 
-## 🚀 Architecture
+## Architecture
 
 **React + Vite** → **ethers.js v6** → **MetaMask** (writes) / **JSON-RPC** (public reads) → **Solidity 0.8.20** → **Hardhat / Sepolia**
 
@@ -42,7 +42,7 @@ A consumer scanning a QR code is a shopper, not a supply chain participant, and 
 installed. Routing all read paths through a wallet-free provider is what makes the verification feature
 actually usable by its intended audience.
 
-### 📦 Key Features
+### Key Features
 
 1. **Product Twin Registration** — only Manufacturers can register products, generating a unique
    on-chain record plus a downloadable QR code.
@@ -62,7 +62,7 @@ actually usable by its intended audience.
 
 ---
 
-## 🛠️ Running Locally
+## Running Locally
 
 ### 1. Install and start a local chain
 ```bash
@@ -117,7 +117,7 @@ Open `http://localhost:5173`. Verification works immediately with no wallet.
 
 ---
 
-## 👥 Roles Setup
+## Roles Setup
 
 1. Connect MetaMask to the Hardhat network: `HTTP://127.0.0.1:8545`, chain ID `1337`.
    The app shows a **Switch Network** banner if your wallet is on the wrong chain.
@@ -130,7 +130,7 @@ If you ran `npm run seed`, roles are already assigned — just import the privat
 
 ---
 
-## 🌐 Sepolia Testnet Deployment
+## Sepolia Testnet Deployment
 
 ```bash
 cp .env.example .env
@@ -142,12 +142,12 @@ Fill in `SEPOLIA_RPC_URL` and `PRIVATE_KEY`, then:
 npm run deploy:sepolia
 ```
 
-> ⚠️ Use a **throwaway wallet funded from a faucet**. Never put a real private key in `.env`.
+> **Use a throwaway wallet funded from a faucet.** Never put a real private key in `.env`.
 > `.env` is gitignored; `.env.example` is the committed template.
 
 ---
 
-## 📐 Design Notes
+## Design Notes
 
 **Why product IDs are emitted twice.** Solidity stores an `indexed` dynamic type (string, bytes, array)
 in the log topic as its **keccak256 hash**, not its value. An off-chain listener reading an indexed

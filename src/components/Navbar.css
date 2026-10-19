@@ -13,6 +13,11 @@
   color: #66fcf1;
   text-decoration: none;
   font-family: 'Fira Code', 'Courier New', Courier, monospace;
+  /* Flex rather than an inline icon: keeps the glyph optically centred against
+     the cap height instead of sitting on the text baseline. */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .navbar-menu {
@@ -175,4 +180,10 @@
     flex-wrap: wrap;
     gap: 0.5rem;
   }
+}
+
+/* The logo mark takes the brand accent rather than the cyan of the wordmark
+   beside it, so the two read as a lockup instead of one cyan blur. */
+.navbar-logo svg {
+  color: var(--brand-accent);
 }

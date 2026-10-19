@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
+import { TriangleAlert } from 'lucide-react';
 import QrScanner from '../components/QrScanner';
 import './VerifyProduct.css';
 
@@ -268,7 +269,10 @@ function VerifyProduct({ readContract, contract }) {
 
         {anomaly && (
           <div className="scan-anomaly" role="alert">
-            <strong>⚠ Possible cloned label.</strong> {anomaly}
+            <TriangleAlert className="scan-anomaly-icon" size={18} strokeWidth={2} aria-hidden="true" />
+            <span>
+              <strong>Possible cloned label.</strong> {anomaly}
+            </span>
           </div>
         )}
 
@@ -345,7 +349,11 @@ function VerifyProduct({ readContract, contract }) {
                 <div key={entry.index} className="timeline-item">
                   <div className="timeline-marker"></div>
                   <div className="timeline-content">
-                    <span className="status-badge">{entry.status}</span>
+                    {/* Stage class drives the colour, so the timeline reads
+                        amber -> blue -> purple -> green as custody advances. */}
+                    <span className={`status-badge status-${entry.status.toLowerCase()}`}>
+                      {entry.status}
+                    </span>
                     <p className="actor">{entry.actor}</p>
                     <p className="timestamp">{entry.timestamp}</p>
                   </div>

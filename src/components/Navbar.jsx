@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { Package } from 'lucide-react';
 import './Navbar.css';
 
 function Navbar({ account, userRole, isOwner, getRoleName, connectWallet }) {
@@ -12,7 +13,10 @@ function Navbar({ account, userRole, isOwner, getRoleName, connectWallet }) {
     <nav className="navbar">
       <div className="navbar-brand">
         <Link to="/" className="navbar-logo" onClick={closeMenu}>
-          📦 Supply Chain dApp
+          {/* aria-hidden: the adjacent text already names the link, so announcing
+              the icon too would just repeat it to a screen reader. */}
+          <Package size={18} strokeWidth={1.75} aria-hidden="true" />
+          <span>Supply Chain dApp</span>
         </Link>
       </div>
 
