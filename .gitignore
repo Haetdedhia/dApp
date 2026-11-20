@@ -6,3 +6,6 @@ coverage
 coverage.json
 .env
 .DS_Store
+
+# Personal viva preparation notes, not part of the deliverable
+VIVA-PREP.md

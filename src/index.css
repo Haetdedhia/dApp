@@ -1,24 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
 /**
- * Colour system.
+ * Design tokens.
  *
- * Cyan is the UI chrome: links, buttons, borders, focus. Because it is
- * everywhere, anything else tinted cyan disappears into the furniture.
+ * Two rules hold this system together:
  *
- * So the four supply chain stages get their own palette, deliberately outside
- * the cyan family. The same colour means the same stage everywhere it appears -
- * the Home page icons, the dashboard status pills, and the verify page status -
- * so colour carries meaning rather than decoration.
+ * 1. Cyan/teal is UI chrome — links, focus, small-caps labels. Because it is
+ *    everywhere, anything else tinted with it disappears into the furniture.
+ * 2. The four stage colours are the ONLY saturated colours in the product, so
+ *    colour always means lifecycle stage and never decoration. Distributor is
+ *    blue rather than teal precisely so a status can never read as clickable.
  *
- * Distributor is blue rather than cyan precisely so it cannot be mistaken for
- * an interactive element.
+ * Type follows the same logic: Inter for anything a person reads as language,
+ * JetBrains Mono strictly for machine data — IDs, addresses, hashes, gas
+ * figures, large numerals.
  */
 :root {
-  --stage-manufactured: #ffb000; /* amber  - made, not yet moved */
-  --stage-distributor: #60a5fa;  /* blue   - in transit */
-  --stage-retailer: #a78bfa;     /* purple - on the shelf */
-  --stage-sold: #4ade80;         /* green  - lifecycle complete */
+  /* Surfaces */
+  --bg: #0A0B0D;
+  --surface: #121418;
+  --surface-raised: #1A1D21;
+  --surface-sunken: #0C0E11;
+  --border: #24282E;
+  --border-strong: #333942;
 
-  --brand-accent: #ffb000;       /* logo mark, against the cyan wordmark */
+  /* Text */
+  --text: #F4F6F8;
+  --text-secondary: #A7B0BA;
+  --text-muted: #78828D;
+  --text-disabled: #4A525B;
+
+  /* Accent */
+  --accent: #5EEAD4;
+  --accent-hover: #99F6E4;
+
+  /* Lifecycle stages */
+  --stage-manufactured: #F5A524;
+  --stage-distributor: #5B9DF9;
+  --stage-retailer: #B18AF9;
+  --stage-sold: #46D07F;
+
+  /* Feedback */
+  --danger: #FF6B6B;
+  --warning: #F5A524;
+  --warning-text: #D9C08C;
+
+  /* Type */
+  --font-sans: Inter, system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Radii */
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 10px;
+  --r-xl: 14px;
+  --r-2xl: 18px;
+
+  /* Motion. Every animated rule is disabled under prefers-reduced-motion
+     at the bottom of this file. */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --t-fast: 120ms;
+  --t-base: 180ms;
 }
 
 * {
@@ -28,80 +70,247 @@
 }
 
 body {
-  font-family: 'Fira Code', 'Courier New', Courier, monospace;
+  font-family: var(--font-sans);
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #0b0c10;
-  color: #c5c6c7;
-  min-height: 100vh;
 }
 
-code {
-  font-family: 'Fira Code', 'Courier New', Courier, monospace;
+code,
+.mono {
+  font-family: var(--font-mono);
+}
+
+a {
+  color: var(--accent);
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+/* A visible focus ring on every interactive element. :focus-visible rather
+   than :focus so it appears for keyboard users without ringing on mouse click. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+input::placeholder {
+  color: var(--text-disabled);
 }
 
 .app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #0b0c10;
-  position: relative;
-}
-
-/* Retro CRT-like scanlines (subtle overlay) */
-.app::before {
-  content: " ";
-  display: block;
-  position: fixed;
-  top: 0; left: 0; bottom: 0; right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-  z-index: 9999;
-  background-size: 100% 4px, 6px 100%;
-  pointer-events: none;
-  opacity: 0.15;
+  background-color: var(--bg);
 }
 
 .main-content {
-  padding: 2rem;
-  max-width: 1000px;
+  flex: 1;
   width: 100%;
-  margin: 0 auto;
 }
 
-/* Custom Scrollbar for CLI Look */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #0f1015;
-}
-::-webkit-scrollbar-thumb {
-  background: #1f2833;
-  border: 1px solid #45f3ff;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #45f3ff;
+/* Screen-reader-only: used for labels that would be redundant on screen but
+   are required for an input to be announced. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-/* ===== Global responsive layout ===== */
+/* ===== Shared primitives ===== */
+
+.btn {
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 13px 24px;
+  border-radius: var(--r-lg);
+  border: 1px solid transparent;
+  cursor: pointer;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: background-color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+
+.btn-primary {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #FFFFFF;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border-strong);
+  font-weight: 500;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.field-label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 9px;
+}
+
+.field-hint {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.input {
+  width: 100%;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+  min-height: 50px;
+  transition: border-color var(--t-fast) var(--ease);
+}
+
+.input:hover:not(:focus) {
+  border-color: var(--text-muted);
+}
+
+.input-mono {
+  font-family: var(--font-mono);
+}
+
+.card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--r-xl);
+}
+
+/* ===== Motion =====
+   Keyframes are defined here; components opt in. Kept deliberately short —
+   anything longer reads as latency rather than polish. */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -340px 0;
+  }
+  to {
+    background-position: 340px 0;
+  }
+}
+
+/* Draws the custody timeline's connecting line downward. Animating
+   scaleY from a top origin avoids laying out on every frame. */
+@keyframes draw-down {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface) 0%,
+    var(--surface-raised) 50%,
+    var(--surface) 100%
+  );
+  background-size: 680px 100%;
+  animation: shimmer 1.3s linear infinite;
+  border-radius: var(--r-sm);
+}
+
+.spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 999px;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+/* ===== Responsive ===== */
 
 @media (max-width: 768px) {
-  .main-content {
-    padding: 1.25rem 1rem;
+  .btn {
+    font-size: 14.5px;
   }
 }
 
-@media (max-width: 480px) {
-  .main-content {
-    padding: 1rem 0.75rem;
-  }
-}
-
-/* The CRT scanline overlay is heavy on mobile GPUs and hurts QR scanning
-   readability, so drop it on small screens. */
-@media (max-width: 600px) {
-  .app::before {
-    display: none;
+/* ===== Reduced motion =====
+   Honours the OS setting. Everything still renders in its final state —
+   nothing is hidden, only the movement is removed. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

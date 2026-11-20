@@ -1,180 +1,115 @@
-.roles-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem 0;
-}
+/* Layout comes from CreateProduct.css, which this page imports first. */
 
-.roles-card {
-  background-color: #0f1015;
-  border: 1px solid #1f2833;
-  padding: 2rem;
-  max-width: 500px;
-  width: 100%;
-  position: relative;
-}
-
-.roles-card::before {
-  content: "[ ROLE_MANAGER ]";
-  position: absolute;
-  top: -10px;
-  left: 10px;
-  background-color: #0b0c10;
-  padding: 0 5px;
-  color: #66fcf1;
-  font-size: 0.8rem;
-}
-
-.roles-card h2 {
-  font-size: 1.3rem;
-  margin-bottom: 0.5rem;
-  color: #66fcf1;
-  font-weight: normal;
-}
-
-.subtitle {
-  color: #8f9095;
-  font-size: 0.8rem;
-  margin-bottom: 1.5rem;
-}
-
-.roles-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  text-align: left;
-}
-
-.form-group label {
-  font-size: 0.8rem;
-  color: #c5c6c7;
-}
-
-.form-group input,
-.form-group select {
-  font-family: inherit;
-  padding: 0.6rem;
-  border: 1px solid #1f2833;
-  background-color: #0a0b0d;
-  color: #c5c6c7;
-  outline: none;
-  font-size: 0.9rem;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-  border: 1px solid #66fcf1;
-}
-
-.form-group input::placeholder {
-  color: #4f5055;
-}
-
-.form-group option {
-  background-color: #0f1015;
-  color: #c5c6c7;
-}
-
-.submit-btn {
-  background-color: transparent;
-  color: #66fcf1;
-  border: 1px solid #66fcf1;
-  padding: 0.7rem;
-  font-size: 0.9rem;
-  font-family: inherit;
+.form-card select.input {
+  appearance: none;
   cursor: pointer;
-  transition: all 0.15s ease;
-  margin-top: 0.5rem;
+  /* Room for the chevron drawn by the background image below. */
+  padding-right: 42px;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2378828D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
 }
 
-.submit-btn:hover:not(:disabled) {
-  background-color: #66fcf1;
-  color: #0b0c10;
+.form-card option {
+  background: var(--surface);
+  color: var(--text);
 }
 
-.submit-btn:disabled {
-  border-color: #1f2833;
-  color: #4f5055;
-  cursor: not-allowed;
+.form-card .alert {
+  margin-bottom: 24px;
+  margin-top: 0;
 }
 
-.status-box {
-  margin-top: 1.25rem;
-  padding: 0.8rem;
-  font-size: 0.85rem;
+/* ===== Lookup ===== */
+
+.lookup-card {
+  margin-top: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--r-2xl);
+  padding: 26px 30px;
+}
+
+.lookup-card h2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.lookup-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.lookup-row .input {
+  flex: 999 1 280px;
+  min-width: 0;
+  min-height: 46px;
+  font-size: 14px;
+}
+
+.lookup-btn {
+  font-size: 14px;
+  padding: 12px 18px;
+  min-height: 46px;
+}
+
+.lookup-result {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  animation: rise 220ms var(--ease);
+}
+
+.lookup-address {
+  font-size: 13px;
+  color: var(--text-secondary);
   word-break: break-all;
-  border: 1px solid transparent;
+  min-width: 0;
 }
 
-.status-box.success {
-  background-color: rgba(72, 187, 120, 0.05);
-  border: 1px solid #48bb78;
-  color: #48bb78;
+/* Reuses the role palette from Navbar.css so a role is the same colour
+   wherever it appears. */
+.lookup-role {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  padding: 5px 10px;
+  white-space: nowrap;
+  color: var(--text-muted);
+  background: var(--surface-raised);
 }
 
-.status-box.error {
-  background-color: rgba(245, 101, 101, 0.05);
-  border: 1px solid #f56565;
-  color: #f56565;
+.lookup-role.role-manufacturer {
+  color: var(--stage-manufactured);
+  background: rgba(245, 165, 36, 0.12);
 }
 
-/* ===== Responsive ===== */
+.lookup-role.role-distributor {
+  color: var(--stage-distributor);
+  background: rgba(91, 157, 249, 0.12);
+}
+
+.lookup-role.role-retailer {
+  color: var(--stage-retailer);
+  background: rgba(177, 138, 249, 0.12);
+}
 
 @media (max-width: 768px) {
-  .roles-card {
-    padding: 1.25rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .roles-card {
-    padding: 1rem;
+  .lookup-card {
+    padding: 22px 20px;
   }
 
-  .roles-card h2 {
-    font-size: 1.1rem;
+  .lookup-btn {
+    width: 100%;
   }
-
-  .roles-card input,
-  .roles-card select {
-    font-size: 16px; /* iOS Safari zooms the page on focus below 16px */
-  }
-}
-
-/* Divider between the assign form and the lookup form */
-.roles-divider {
-  height: 1px;
-  background-color: #1f2833;
-  margin: 2rem 0 1.5rem;
-}
-
-.roles-card h3 {
-  color: #45f3ff;
-  font-size: 1rem;
-  font-weight: normal;
-  margin-bottom: 1rem;
-}
-
-.submit-btn.secondary {
-  background-color: transparent;
-  color: #858687;
-  border-color: #1f2833;
-}
-
-.submit-btn.secondary:hover:not(:disabled) {
-  color: #45f3ff;
-  border-color: #45f3ff;
-  background-color: rgba(69, 243, 255, 0.05);
-}
-
-.roles-card .status-box.info {
-  border-left: 3px solid #45f3ff;
-  color: #45f3ff;
-  background-color: rgba(69, 243, 255, 0.05);
 }

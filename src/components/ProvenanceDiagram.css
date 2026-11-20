@@ -1,0 +1,97 @@
+.provenance-diagram {
+  width: 100%;
+}
+
+.provenance-diagram svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+/* The faint full path, always visible, so the shape reads before the
+   animated trail catches up. */
+.pd-track {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The accent trail draws itself along the same path. 1200 comfortably exceeds
+   the real path length, so the dash offset covers it without measuring. */
+.pd-trail {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.55;
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: pd-draw 1500ms var(--ease) 200ms forwards;
+}
+
+@keyframes pd-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Each node lands just after the trail reaches it. */
+.pd-node,
+.pd-core {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pd-pop 380ms var(--ease) forwards;
+  animation-delay: calc(360ms + var(--i) * 330ms);
+}
+
+@keyframes pd-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.pd-label {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.pd-index {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--text-muted);
+}
+
+@media (max-width: 600px) {
+  .pd-label {
+    font-size: 15px;
+  }
+
+  .pd-index {
+    font-size: 13px;
+  }
+}
+
+/* The global reduced-motion block shortens these to ~0ms, but opacity:0 is the
+   start state, so it must be explicitly restored or the nodes stay invisible. */
+@media (prefers-reduced-motion: reduce) {
+  .pd-trail {
+    stroke-dashoffset: 0;
+  }
+
+  .pd-node,
+  .pd-core {
+    opacity: 1;
+  }
+}

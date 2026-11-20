@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import NetworkBanner from './components/NetworkBanner';
 import Home from './pages/Home';
 import CreateProduct from './pages/CreateProduct';
@@ -183,11 +184,6 @@ function App() {
     }
   };
 
-  const getRoleName = (role) => {
-    const roles = ['None', 'Manufacturer', 'Distributor', 'Retailer'];
-    return roles[role] ?? 'Unknown';
-  };
-
   // Only warn when a wallet is actually connected. A visitor with no wallet is
   // a supported case, not an error.
   const wrongNetwork =
@@ -200,7 +196,6 @@ function App() {
           account={account}
           userRole={userRole}
           isOwner={isOwner}
-          getRoleName={getRoleName}
           connectWallet={connectWallet}
         />
 
@@ -234,7 +229,10 @@ function App() {
               element={<VerifyProduct readContract={readContract} contract={contract} />}
             />
 
-            {/* Public route, also wallet-free - builds its list from event logs. */}
+            {/* Public route, also wallet-free - builds its list from event logs.
+                /dashboard kept as an alias so any QR or bookmark already in the
+                wild still resolves. */}
+            <Route path="/registry" element={<Dashboard readContract={readContract} />} />
             <Route path="/dashboard" element={<Dashboard readContract={readContract} />} />
 
             <Route
@@ -243,6 +241,8 @@ function App() {
             />
           </Routes>
         </main>
+
+        <Footer />
       </div>
     </Router>
   );

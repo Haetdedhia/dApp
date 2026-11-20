@@ -1,213 +1,228 @@
-.create-container {
+/* Shared form-page shell. TransferProduct.css and ManageRoles.css import this
+   rather than redefining the same layout three times. */
+
+.form-page {
+  padding: 44px 32px 72px;
+}
+
+.form-shell {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.form-shell-wide {
+  max-width: 1180px;
+}
+
+.form-head {
+  margin-bottom: 32px;
+}
+
+.form-head h1 {
+  font-size: 32px;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.form-head p {
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.form-split {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem 0;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: flex-start;
 }
 
-.create-card {
-  background-color: #0f1015;
-  border: 1px solid #1f2833;
-  padding: 2rem;
-  max-width: 600px;
-  width: 100%;
-  position: relative;
-}
-
-.create-card::before {
-  content: "[ REGISTER_PRODUCT ]";
-  position: absolute;
-  top: -10px;
-  left: 10px;
-  background-color: #0b0c10;
-  padding: 0 5px;
-  color: #66fcf1;
-  font-size: 0.8rem;
-}
-
-.error-card {
-  border: 1px solid #f56565;
-  text-align: center;
-}
-
-.error-card::before {
-  content: "[ ACCESS_DENIED ]";
-  color: #f56565;
-}
-
-.create-card h2 {
-  font-size: 1.3rem;
-  margin-bottom: 0.5rem;
-  color: #66fcf1;
-  font-weight: normal;
-}
-
-.subtitle {
-  color: #8f9095;
-  font-size: 0.8rem;
-  margin-bottom: 1.5rem;
-}
-
-.create-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+.form-card {
+  flex: 999 1 460px;
+  min-width: 0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--r-2xl);
+  padding: 30px;
 }
 
 .form-group {
+  margin-bottom: 24px;
+}
+
+.form-group:last-of-type {
+  margin-bottom: 28px;
+}
+
+.form-footer {
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
   display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  text-align: left;
-}
-
-.form-group label {
-  font-size: 0.8rem;
-  color: #c5c6c7;
-}
-
-.form-group input {
-  font-family: inherit;
-  padding: 0.6rem;
-  border: 1px solid #1f2833;
-  background-color: #0a0b0d;
-  color: #c5c6c7;
-  outline: none;
-  font-size: 0.9rem;
-}
-
-.form-group input:focus {
-  border: 1px solid #66fcf1;
-}
-
-.form-group input::placeholder {
-  color: #4f5055;
-}
-
-.submit-btn {
-  background-color: transparent;
-  color: #66fcf1;
-  border: 1px solid #66fcf1;
-  padding: 0.7rem;
-  font-size: 0.9rem;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  margin-top: 0.5rem;
-}
-
-.submit-btn:hover:not(:disabled) {
-  background-color: #66fcf1;
-  color: #0b0c10;
-}
-
-.submit-btn:disabled {
-  border-color: #1f2833;
-  color: #4f5055;
-  cursor: not-allowed;
-}
-
-.status-box {
-  margin-top: 1.25rem;
-  padding: 0.8rem;
-  font-size: 0.85rem;
-  word-break: break-all;
-  border: 1px solid transparent;
-}
-
-.status-box.success {
-  background-color: rgba(72, 187, 120, 0.05);
-  border: 1px solid #48bb78;
-  color: #48bb78;
-}
-
-.status-box.error {
-  background-color: rgba(245, 101, 101, 0.05);
-  border: 1px solid #f56565;
-  color: #f56565;
-}
-
-.qr-box {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px dashed #1f2833;
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
-.qr-box h3 {
-  font-size: 1rem;
-  color: #45f3ff;
-  font-weight: normal;
+.gas-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--text-muted);
 }
 
-.qr-image-wrapper {
-  background: white;
-  padding: 8px;
-  border: 1px solid #1f2833;
+.gas-note svg {
+  flex-shrink: 0;
 }
 
-.qr-info {
-  font-size: 0.75rem;
-  color: #8f9095;
+/* ===== Access gate ===== */
+
+.gate {
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--r-2xl);
+  padding: 56px 36px;
+  text-align: center;
 }
 
-.download-btn {
-  background-color: transparent;
-  color: #48bb78;
-  border: 1px solid #48bb78;
-  padding: 0.5rem 1rem;
-  font-family: inherit;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: all 0.15s ease;
+.gate h1 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
 }
 
-.download-btn:hover {
-  background-color: #48bb78;
-  color: #0b0c10;
+.gate p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+/* ===== QR panel ===== */
+
+.qr-panel {
+  flex: 1 1 320px;
+  min-width: 0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--r-2xl);
+  padding: 30px;
+}
+
+.qr-panel h2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+
+.qr-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 22px;
+}
+
+.qr-frame {
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  margin-bottom: 16px;
+  /* A QR code needs a light quiet zone to scan reliably, so this one panel
+     deliberately breaks the dark theme rather than risk an unreadable code. */
+  background: #FFFFFF;
+  animation: rise 280ms var(--ease);
+}
+
+.qr-frame svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 240px;
+}
+
+.qr-empty {
+  background: transparent;
+  border: 1px dashed var(--border-strong);
+  aspect-ratio: 1 / 1;
+  flex-direction: column;
+  gap: 14px;
+  color: var(--text-disabled);
+  animation: none;
+}
+
+.qr-empty p {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-muted);
+  text-align: center;
+  max-width: 200px;
+}
+
+.qr-url {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  word-break: break-all;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.qr-warning {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--warning-text);
+  background: rgba(245, 165, 36, 0.07);
+  border-left: 2px solid var(--warning);
+  padding: 12px 14px;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  margin-bottom: 16px;
+}
+
+.qr-warning strong {
+  color: var(--warning);
+  font-weight: 600;
+}
+
+.qr-download {
+  width: 100%;
+  font-size: 14px;
+  padding: 12px 16px;
+  min-height: 46px;
 }
 
 /* ===== Responsive ===== */
 
 @media (max-width: 768px) {
-  .create-card {
-    padding: 1.25rem;
+  .form-page {
+    padding: 28px 20px 56px;
+  }
+
+  .form-card,
+  .qr-panel {
+    padding: 24px 20px;
+  }
+
+  .form-footer .btn {
+    width: 100%;
   }
 }
 
 @media (max-width: 480px) {
-  .create-card {
-    padding: 1rem;
+  .form-page {
+    padding: 22px 16px 48px;
   }
 
-  .create-card h2 {
-    font-size: 1.1rem;
+  .form-head h1 {
+    font-size: 25px;
   }
 
-  .create-card input,
-  .create-card select {
-    font-size: 16px; /* iOS Safari zooms the page on focus below 16px */
+  /* iOS Safari zooms the page when a focused input is under 16px. */
+  .form-card .input,
+  .form-card select {
+    font-size: 16px;
   }
-}
-
-.qr-url {
-  font-size: 0.7rem;
-  color: #858687;
-  word-break: break-all;
-  text-align: center;
-  margin-top: 0.4rem;
-}
-
-.qr-warning {
-  font-size: 0.72rem;
-  line-height: 1.6;
-  color: #ffb000;
-  background-color: rgba(255, 176, 0, 0.06);
-  border-left: 3px solid #ffb000;
-  padding: 0.7rem 0.9rem;
-  margin-top: 0.8rem;
-  text-align: left;
 }

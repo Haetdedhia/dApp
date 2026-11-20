@@ -1,208 +1,482 @@
-.dashboard-container {
-  display: flex;
-  justify-content: center;
+.registry-page {
+  padding: 40px 32px 72px;
 }
 
-.dashboard-card {
-  width: 100%;
-  background-color: #0c0d12;
-  border: 1px solid #1f2833;
-  padding: 2rem;
+.registry-shell {
+  max-width: 1320px;
+  margin: 0 auto;
 }
 
-.dashboard-header {
+.registry-head {
   display: flex;
+  align-items: flex-end;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
+  gap: 20px;
   flex-wrap: wrap;
+  margin-bottom: 26px;
 }
 
-.dashboard-card h2 {
-  color: #66fcf1;
-  font-size: 1.3rem;
-  margin-bottom: 0.4rem;
+.registry-head h1 {
+  font-size: 30px;
+  letter-spacing: -0.028em;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
 }
 
-.dashboard-card .subtitle {
-  color: #858687;
-  font-size: 0.85rem;
-  margin-bottom: 1.5rem;
+.registry-head p {
+  font-size: 14.5px;
+  color: var(--text-secondary);
 }
 
-.refresh-btn {
-  background-color: transparent;
-  color: #66fcf1;
-  border: 1px solid #66fcf1;
-  padding: 0.45rem 1rem;
-  font-family: inherit;
-  font-size: 0.8rem;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.15s ease;
+.registry-refresh {
+  font-size: 14px;
+  padding: 10px 16px;
+  min-height: 44px;
 }
 
-.refresh-btn:hover:not(:disabled) {
-  background-color: #66fcf1;
-  color: #0b0c10;
+/* ===== KPI strip =====
+   One white card marks the primary metric. Cheap, very effective hierarchy. */
+
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
 }
 
-.refresh-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+.kpi {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  padding: 20px 22px;
 }
 
-.dashboard-filters {
+.kpi-primary {
+  background: var(--text);
+  border-color: var(--text);
+}
+
+.kpi-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.kpi-primary .kpi-label {
+  color: #4A525B;
+}
+
+.kpi-value {
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  /* Tabular figures stop the width jittering while the count-up runs. */
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi-primary .kpi-value {
+  color: var(--bg);
+}
+
+.kpi-value-row {
   display: flex;
+  align-items: baseline;
+  gap: 8px;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
 }
 
-.filter-chip {
-  background-color: transparent;
-  color: #858687;
-  border: 1px solid #1f2833;
-  padding: 0.35rem 0.75rem;
-  font-family: inherit;
-  font-size: 0.75rem;
-  cursor: pointer;
+.kpi-flag {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--warning);
+}
+
+/* ===== Stage distribution ===== */
+
+.stage-bar-card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  padding: 20px 22px;
+  margin-bottom: 20px;
+}
+
+.stage-bar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.stage-bar-head h2 {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.stage-bar-total {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.stage-bar {
+  display: flex;
+  gap: 3px;
+  height: 9px;
+  margin-bottom: 16px;
+}
+
+.stage-bar-seg {
+  border-radius: 999px;
+  min-width: 10px;
+  transform-origin: left;
+  animation: grow-x 520ms var(--ease) both;
+}
+
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.stage-legend {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+.stage-legend-item {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  transition: all 0.15s ease;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--text-secondary);
 }
 
-.filter-chip:hover {
-  color: #66fcf1;
-  border-color: #66fcf1;
+.stage-legend-item strong {
+  color: var(--text);
+  font-weight: 600;
 }
 
-.filter-chip.active {
-  color: #0b0c10;
-  background-color: #66fcf1;
-  border-color: #66fcf1;
+.stage-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  flex-shrink: 0;
 }
 
-.filter-count {
-  opacity: 0.7;
-  font-size: 0.7rem;
+/* ===== Layout ===== */
+
+.registry-skeleton {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 16px;
 }
 
-.table-wrapper {
-  overflow-x: auto;
+.registry-split {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
 }
 
-.product-table {
+.registry-list-pane {
+  flex: 1 1 340px;
+  min-width: 0;
+}
+
+.registry-detail-pane {
+  flex: 999 1 560px;
+  min-width: 0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  padding: 28px 30px;
+  animation: fade 220ms var(--ease);
+}
+
+/* ===== List ===== */
+
+.registry-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.registry-search svg {
+  position: absolute;
+  left: 13px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.registry-search .input {
+  padding-left: 38px;
+  font-size: 14px;
+  background: var(--surface);
+  border-color: var(--border);
+  min-height: 46px;
+}
+
+.registry-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.registry-row {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.8rem;
-  min-width: 720px;
-}
-
-.product-table th {
   text-align: left;
-  color: #45f3ff;
-  font-weight: normal;
-  padding: 0.6rem 0.75rem;
-  border-bottom: 1px solid #1f2833;
-  white-space: nowrap;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 16px 18px;
+  transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
 }
 
-.product-table td {
-  padding: 0.7rem 0.75rem;
-  border-bottom: 1px solid rgba(31, 40, 51, 0.5);
-  color: #c5c6c7;
+.registry-row:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-raised);
 }
 
-.product-table tr:hover td {
-  background-color: rgba(102, 252, 241, 0.03);
+.registry-row.active {
+  border-color: var(--accent);
+  background: var(--surface-raised);
 }
 
-.product-table .mono {
-  font-size: 0.75rem;
-  color: #858687;
+.registry-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
-.status-pill {
-  padding: 0.2rem 0.5rem;
-  font-size: 0.7rem;
-  border: 1px solid currentColor;
-  white-space: nowrap;
+.registry-row-id {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
 }
 
-/* Shared lifecycle palette - see :root in index.css. Distributor moved off cyan
-   so a status pill can never be mistaken for an interactive element. */
-.status-manufactured {
-  color: var(--stage-manufactured);
-}
-.status-distributorreceived {
-  color: var(--stage-distributor);
-}
-.status-retailerreceived {
-  color: var(--stage-retailer);
-}
-.status-sold {
-  color: var(--stage-sold);
+.chip-sm {
+  font-size: 11.5px;
+  padding: 4px 9px;
+  gap: 5px;
 }
 
-.row-link {
-  color: #66fcf1;
-  text-decoration: none;
-  font-size: 0.75rem;
-  border: 1px solid #1f2833;
-  padding: 0.25rem 0.6rem;
-  transition: all 0.15s ease;
-  white-space: nowrap;
+.registry-row-name {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 10px;
 }
 
-.row-link:hover {
-  border-color: #66fcf1;
-  background-color: rgba(102, 252, 241, 0.05);
+.registry-row-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
 }
 
-.dashboard-card .status-box {
-  padding: 0.85rem 1rem;
-  font-size: 0.8rem;
-  border-left: 3px solid;
-  margin-bottom: 1rem;
+.registry-no-match {
+  font-size: 14px;
+  color: var(--text-muted);
+  padding: 20px 2px;
 }
 
-.dashboard-card .status-box.error {
-  border-color: #ff5f56;
-  color: #ff5f56;
-  background-color: rgba(255, 95, 86, 0.05);
+/* ===== Detail ===== */
+
+.registry-back {
+  display: none;
+  font-size: 13.5px;
+  padding: 9px 14px;
+  min-height: 42px;
+  margin-bottom: 18px;
 }
 
-.dashboard-card .status-box.info {
-  border-color: #45f3ff;
-  color: #45f3ff;
-  background-color: rgba(69, 243, 255, 0.05);
+.registry-detail-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+
+.registry-detail-id {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.registry-detail-head h2 {
+  font-size: 24px;
+  letter-spacing: -0.022em;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.registry-public {
+  font-size: 14px;
+  padding: 11px 18px;
+  min-height: 44px;
+}
+
+.registry-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px 24px;
+  padding-bottom: 26px;
+  margin-bottom: 26px;
+  border-bottom: 1px solid var(--border);
+}
+
+.registry-detail-grid .detail-value {
+  font-size: 15px;
+}
+
+.registry-detail-sub {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+
+/* Compact timeline variant: a plain dot instead of an icon medallion, since
+   the detail pane is a summary and the full trail lives on the verify page. */
+.timeline-compact .timeline-rail {
+  width: 9px;
+}
+
+.timeline-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--stage);
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.timeline-compact .timeline-content {
+  padding-bottom: 18px;
+}
+
+.timeline-compact .timeline-stage {
+  font-size: 13.5px;
+}
+
+/* ===== Empty state ===== */
+
+.empty-state {
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--r-xl);
+  padding: 56px 32px;
+  text-align: center;
+}
+
+.empty-state h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  font-size: 14.5px;
+  color: var(--text-secondary);
+}
+
+/* ===== Responsive =====
+   Below 900px the two panes become a drill-down: the list fills the width,
+   and selecting a product swaps in the detail with a back button. Side by side
+   at this width leaves both panes too narrow to be useful. */
+
+@media (max-width: 900px) {
+  .kpi-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .registry-skeleton {
+    grid-template-columns: 1fr;
+  }
+
+  .registry-split {
+    display: block;
+  }
+
+  .registry-detail-pane {
+    display: none;
+  }
+
+  .registry-split.detail-open .registry-list-pane {
+    display: none;
+  }
+
+  .registry-split.detail-open .registry-detail-pane {
+    display: block;
+  }
+
+  .registry-back {
+    display: inline-flex;
+  }
 }
 
 @media (max-width: 768px) {
-  .dashboard-card {
-    padding: 1.25rem;
+  .registry-page {
+    padding: 28px 20px 56px;
   }
 
-  .dashboard-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .refresh-btn {
+  .registry-refresh {
     width: 100%;
+  }
+
+  .registry-detail-pane {
+    padding: 22px 20px;
+  }
+
+  .registry-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
   }
 }
 
 @media (max-width: 480px) {
-  .dashboard-card {
-    padding: 1rem;
-    border-left: none;
-    border-right: none;
+  .registry-page {
+    padding: 22px 16px 48px;
   }
 
-  .dashboard-card h2 {
-    font-size: 1.1rem;
+  .kpi-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-value {
+    font-size: 32px;
+  }
+
+  .registry-head h1 {
+    font-size: 25px;
+  }
+
+  .registry-search .input {
+    font-size: 16px;
+  }
+
+  .registry-public {
+    width: 100%;
   }
 }

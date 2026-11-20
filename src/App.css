@@ -1,3 +1,5 @@
+/* Layout only. Visual tokens and shared primitives live in index.css. */
+
 .app {
   display: flex;
   flex-direction: column;

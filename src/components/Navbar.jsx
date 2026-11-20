@@ -3,96 +3,89 @@ import { Link, NavLink } from 'react-router-dom';
 import { Package } from 'lucide-react';
 import './Navbar.css';
 
-function Navbar({ account, userRole, isOwner, getRoleName, connectWallet }) {
+const ROLE_LABEL = ['None', 'Manufacturer', 'Distributor', 'Retailer'];
+
+function shortenAddress(address) {
+  return `${address.substring(0, 6)}…${address.substring(address.length - 4)}`;
+}
+
+function Navbar({ account, userRole, isOwner, connectWallet }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
 
   const canTransfer = userRole === 1 || userRole === 2 || userRole === 3;
 
+  // Owner outranks any assigned role in the chip, since it is the more
+  // consequential permission.
+  const roleLabel = isOwner ? 'Owner' : ROLE_LABEL[userRole] ?? 'Unknown';
+  const hasRole = isOwner || (userRole !== null && userRole > 0);
+
   return (
-    <nav className="navbar">
-      <div className="navbar-brand">
+    <header className="navbar">
+      <div className="navbar-inner">
         <Link to="/" className="navbar-logo" onClick={closeMenu}>
-          {/* aria-hidden: the adjacent text already names the link, so announcing
-              the icon too would just repeat it to a screen reader. */}
-          <Package size={18} strokeWidth={1.75} aria-hidden="true" />
-          <span>Supply Chain dApp</span>
+          <Package size={20} strokeWidth={1.8} aria-hidden="true" />
+          <span>Provenance</span>
         </Link>
-      </div>
 
-      <button
-        type="button"
-        className="navbar-toggle"
-        aria-label="Toggle navigation"
-        aria-expanded={menuOpen}
-        onClick={() => setMenuOpen((open) => !open)}
-      >
-        <span />
-        <span />
-        <span />
-      </button>
+        <button
+          type="button"
+          className="navbar-toggle"
+          aria-label="Toggle navigation"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
 
-      <div className={`navbar-collapse ${menuOpen ? 'open' : ''}`}>
-        <ul className="navbar-menu">
-          <li>
-            <NavLink to="/" onClick={closeMenu}>
-              Home
-            </NavLink>
-          </li>
-          <li>
+        <div className={`navbar-collapse ${menuOpen ? 'open' : ''}`}>
+          <nav className="navbar-menu" aria-label="Main">
             <NavLink to="/verify" onClick={closeMenu}>
               Verify
             </NavLink>
-          </li>
-          <li>
-            <NavLink to="/dashboard" onClick={closeMenu}>
+            <NavLink to="/registry" onClick={closeMenu}>
               Registry
             </NavLink>
-          </li>
-          {userRole === 1 && (
-            <li>
+            {userRole === 1 && (
               <NavLink to="/create" onClick={closeMenu}>
-                Create Product
+                Register
               </NavLink>
-            </li>
-          )}
-          {canTransfer && (
-            <li>
+            )}
+            {canTransfer && (
               <NavLink to="/transfer" onClick={closeMenu}>
                 Transfer
               </NavLink>
-            </li>
-          )}
-          {/* Only the contract owner can assign roles, so only show the link to
-              them. The contract still enforces this; hiding it just avoids
-              sending everyone else down a dead end. */}
-          {isOwner && (
-            <li>
+            )}
+            {/* The contract rejects non-owners anyway; hiding the link just
+                avoids sending everyone else down a dead end. */}
+            {isOwner && (
               <NavLink to="/roles" onClick={closeMenu}>
-                Manage Roles
+                Roles
               </NavLink>
-            </li>
-          )}
-        </ul>
+            )}
+          </nav>
 
-        <div className="navbar-actions">
-          {account ? (
-            <div className="account-details">
-              <span className="user-role-badge">
-                {isOwner ? 'Owner' : getRoleName(userRole)}
-              </span>
-              <span className="account-address" title={account}>
-                {account.substring(0, 6)}...{account.substring(account.length - 4)}
-              </span>
-            </div>
-          ) : (
-            <button className="connect-btn" onClick={connectWallet}>
-              Connect Wallet
-            </button>
-          )}
+          <div className="navbar-actions">
+            {account ? (
+              <div className="wallet-chip">
+                {hasRole && (
+                  <span className={`role-badge role-${roleLabel.toLowerCase()}`}>{roleLabel}</span>
+                )}
+                <span className="wallet-address mono" title={account}>
+                  {shortenAddress(account)}
+                </span>
+              </div>
+            ) : (
+              <button type="button" className="btn btn-secondary navbar-connect" onClick={connectWallet}>
+                Connect wallet
+              </button>
+            )}
+          </div>
         </div>
       </div>
-    </nav>
+    </header>
   );
 }
 

@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { ethers } from 'ethers';
+import { Zap, Search } from 'lucide-react';
+import TxStatus from '../components/TxStatus';
+import useTransaction from '../lib/useTransaction';
+import './CreateProduct.css';
 import './ManageRoles.css';
 
 const ROLE_OPTIONS = [
@@ -8,64 +12,55 @@ const ROLE_OPTIONS = [
   { value: 3, label: 'Retailer' },
   // The contract supports Role.None (0), so expose it. Without this there is no
   // way to take a role away from an address through the UI.
-  { value: 0, label: 'None (revoke access)' }
+  { value: 0, label: 'None — revoke access' }
 ];
+
+const ROLE_NAMES = ['None', 'Manufacturer', 'Distributor', 'Retailer'];
 
 function ManageRoles({ contract, account, isOwner }) {
   const [targetAddress, setTargetAddress] = useState('');
   const [selectedRole, setSelectedRole] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [statusMessage, setStatusMessage] = useState('');
+  const [validationError, setValidationError] = useState('');
+
   const [lookupAddress, setLookupAddress] = useState('');
-  const [lookupResult, setLookupResult] = useState('');
+  const [lookupResult, setLookupResult] = useState(null);
+  const [lookupError, setLookupError] = useState('');
+
+  const tx = useTransaction();
 
   const handleAssignRole = async (e) => {
     e.preventDefault();
-    if (!contract) {
-      setStatusMessage('Please connect your wallet first.');
-      return;
-    }
+    if (!contract) return;
+
+    setValidationError('');
 
     if (!ethers.isAddress(targetAddress)) {
-      setStatusMessage('Error: that is not a valid Ethereum address.');
+      setValidationError('That is not a valid Ethereum address.');
       return;
     }
 
-    try {
-      setLoading(true);
-      setStatusMessage('Sending blockchain transaction...');
-
-      const tx = await contract.assignRole(targetAddress, selectedRole);
-      setStatusMessage('Transaction submitted. Waiting for confirmation...');
-      await tx.wait();
-
-      const roleLabel = ROLE_OPTIONS.find((r) => r.value === selectedRole)?.label ?? selectedRole;
-      setStatusMessage(`Set ${targetAddress} to ${roleLabel}.`);
-      setTargetAddress('');
-    } catch (error) {
-      console.error(error);
-      setStatusMessage(`Error: ${error.reason || error.message || 'Transaction failed'}`);
-    } finally {
-      setLoading(false);
-    }
+    const ok = await tx.run(() => contract.assignRole(targetAddress, selectedRole));
+    if (ok) setTargetAddress('');
   };
 
   const handleLookup = async (e) => {
     e.preventDefault();
     if (!contract) return;
 
+    setLookupError('');
+    setLookupResult(null);
+
     if (!ethers.isAddress(lookupAddress)) {
-      setLookupResult('That is not a valid Ethereum address.');
+      setLookupError('That is not a valid Ethereum address.');
       return;
     }
 
     try {
       const role = await contract.getRole(lookupAddress);
-      const names = ['None', 'Manufacturer', 'Distributor', 'Retailer'];
-      setLookupResult(`${lookupAddress} currently holds: ${names[Number(role)]}`);
+      setLookupResult({ address: lookupAddress, role: ROLE_NAMES[Number(role)] });
     } catch (error) {
       console.error(error);
-      setLookupResult(`Lookup failed: ${error.reason || error.message}`);
+      setLookupError(`Lookup failed: ${error.reason || error.message}`);
     }
   };
 
@@ -73,10 +68,12 @@ function ManageRoles({ contract, account, isOwner }) {
   // someone fill in a form that can only ever revert is poor UX.
   if (!account) {
     return (
-      <div className="roles-container">
-        <div className="roles-card error-card">
-          <h2>Wallet Required</h2>
-          <p>Connect the wallet that deployed this contract to manage roles.</p>
+      <div className="form-page">
+        <div className="form-shell">
+          <div className="gate">
+            <h1>Wallet required</h1>
+            <p>Connect the wallet that deployed this contract to manage roles.</p>
+          </div>
         </div>
       </div>
     );
@@ -84,37 +81,52 @@ function ManageRoles({ contract, account, isOwner }) {
 
   if (!isOwner) {
     return (
-      <div className="roles-container">
-        <div className="roles-card error-card">
-          <h2>Access Denied</h2>
-          <p>Only the contract owner (the deploying account) can assign roles.</p>
+      <div className="form-page">
+        <div className="form-shell">
+          <div className="gate">
+            <h1>Owner only</h1>
+            <p>
+              Only the contract owner — the account that deployed it — can assign or revoke roles.
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="roles-container">
-      <div className="roles-card">
-        <h2>Manage User Roles</h2>
-        <p className="subtitle">You are connected as the contract owner.</p>
+  const selectedLabel = ROLE_OPTIONS.find((r) => r.value === selectedRole)?.label ?? '';
 
-        <form onSubmit={handleAssignRole} className="roles-form">
+  return (
+    <div className="form-page">
+      <div className="form-shell">
+        <header className="form-head">
+          <h1>Manage roles</h1>
+          <p>You are connected as the contract owner.</p>
+        </header>
+
+        <form onSubmit={handleAssignRole} className="form-card">
           <div className="form-group">
-            <label htmlFor="address">Ethereum Address</label>
+            <label htmlFor="address" className="field-label">
+              Ethereum address
+            </label>
             <input
               type="text"
               id="address"
-              placeholder="0x..."
+              className="input input-mono"
+              placeholder="0x…"
               value={targetAddress}
               onChange={(e) => setTargetAddress(e.target.value)}
               required
             />
           </div>
+
           <div className="form-group">
-            <label htmlFor="role">Role</label>
+            <label htmlFor="role" className="field-label">
+              Role
+            </label>
             <select
               id="role"
+              className="input"
               value={selectedRole}
               onChange={(e) => setSelectedRole(Number(e.target.value))}
             >
@@ -127,45 +139,87 @@ function ManageRoles({ contract, account, isOwner }) {
           </div>
 
           {selectedRole === 0 && (
-            <div className="status-box info">
-              Revoking a role from an address that currently holds a product will freeze
-              that product. Use the owner recovery function to reassign custody if that
-              happens.
+            <div className="alert alert-warning" role="status">
+              <div>
+                <h3>Revoking can strand a product</h3>
+                <p>
+                  If this address currently holds a product, revoking its role freezes that product
+                  — every pipeline function needs both the role and custody. Use the owner recovery
+                  function to reassign custody if that happens.
+                </p>
+              </div>
             </div>
           )}
 
-          <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? 'Assigning...' : 'Assign Role'}
-          </button>
+          {validationError && (
+            <p className="field-error" role="alert">
+              {validationError}
+            </p>
+          )}
+
+          <div className="form-footer">
+            <div className="gas-note">
+              <Zap size={14} strokeWidth={2} aria-hidden="true" />
+              <span>Costs gas · roughly 48,000 units</span>
+            </div>
+            <button type="submit" className="btn btn-primary" disabled={tx.busy}>
+              {tx.busy ? (
+                <>
+                  <span className="spinner" aria-hidden="true" />
+                  {tx.status === 'signing' ? 'Confirm in wallet' : 'Assigning'}
+                </>
+              ) : (
+                'Assign role'
+              )}
+            </button>
+          </div>
+
+          <TxStatus
+            status={tx.status}
+            hash={tx.hash}
+            error={tx.error}
+            successMessage={`Set to ${selectedLabel}`}
+          />
         </form>
 
-        {statusMessage && (
-          <div className={`status-box ${statusMessage.startsWith('Error') ? 'error' : 'success'}`}>
-            {statusMessage}
-          </div>
-        )}
+        <div className="lookup-card">
+          <h2>Check an address</h2>
+          <form onSubmit={handleLookup} className="lookup-form">
+            <label htmlFor="lookup" className="sr-only">
+              Ethereum address to look up
+            </label>
+            <div className="lookup-row">
+              <input
+                type="text"
+                id="lookup"
+                className="input input-mono"
+                placeholder="0x…"
+                value={lookupAddress}
+                onChange={(e) => setLookupAddress(e.target.value)}
+                required
+              />
+              <button type="submit" className="btn btn-secondary lookup-btn">
+                <Search size={15} strokeWidth={2} aria-hidden="true" />
+                Look up
+              </button>
+            </div>
+          </form>
 
-        <div className="roles-divider" />
+          {lookupError && (
+            <p className="field-error lookup-result" role="alert">
+              {lookupError}
+            </p>
+          )}
 
-        <h3>Check an Address</h3>
-        <form onSubmit={handleLookup} className="roles-form">
-          <div className="form-group">
-            <label htmlFor="lookup">Ethereum Address</label>
-            <input
-              type="text"
-              id="lookup"
-              placeholder="0x..."
-              value={lookupAddress}
-              onChange={(e) => setLookupAddress(e.target.value)}
-              required
-            />
-          </div>
-          <button type="submit" className="submit-btn secondary">
-            Look Up Role
-          </button>
-        </form>
-
-        {lookupResult && <div className="status-box info">{lookupResult}</div>}
+          {lookupResult && (
+            <div className="lookup-result" role="status">
+              <span className="mono lookup-address">{lookupResult.address}</span>
+              <span className={`lookup-role role-${lookupResult.role.toLowerCase()}`}>
+                {lookupResult.role}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

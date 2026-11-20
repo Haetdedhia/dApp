@@ -3,40 +3,49 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 1rem;
-  padding: 0.75rem 1.5rem;
-  background-color: rgba(255, 176, 0, 0.08);
-  border-bottom: 2px solid #ffb000;
-  color: #ffb000;
-  font-size: 0.85rem;
+  gap: 14px;
+  padding: 12px 24px;
+  background: rgba(245, 165, 36, 0.08);
+  border-bottom: 1px solid rgba(245, 165, 36, 0.35);
+  color: var(--warning);
+  font-size: 13.5px;
+  animation: rise 240ms var(--ease);
 }
 
 .network-banner-text strong {
-  color: #ffd166;
+  color: #FFD166;
+  font-weight: 600;
 }
 
 .network-banner-btn {
-  background-color: transparent;
-  color: #ffb000;
-  border: 1px solid #ffb000;
-  padding: 0.4rem 0.9rem;
   font-family: inherit;
-  font-size: 0.8rem;
+  background: transparent;
+  color: var(--warning);
+  border: 1px solid rgba(245, 165, 36, 0.5);
+  border-radius: var(--r-md);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.15s ease;
+  min-height: 40px;
+  transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
 }
 
 .network-banner-btn:hover {
-  background-color: #ffb000;
-  color: #0b0c10;
+  background: var(--warning);
+  color: var(--bg);
 }
 
 @media (max-width: 600px) {
   .network-banner {
     flex-direction: column;
     text-align: center;
-    gap: 0.6rem;
-    padding: 0.75rem 1rem;
+    gap: 10px;
+    padding: 12px 16px;
+  }
+
+  .network-banner-btn {
+    width: 100%;
   }
 }
